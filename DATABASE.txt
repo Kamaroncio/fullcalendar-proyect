@@ -1,0 +1,194 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 25-09-2024 a las 17:26:25
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de datos: `reservas`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `events`
+--
+
+CREATE TABLE `events` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `start` datetime NOT NULL,
+  `end` datetime DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `employees` text DEFAULT NULL,
+  `clients` text DEFAULT NULL,
+  `iduser` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `events`
+--
+
+INSERT INTO `events` (`id`, `title`, `start`, `end`, `description`, `employees`, `clients`, `iduser`) VALUES
+(1, 'asdfsf3', '2024-09-26 12:00:00', '2024-09-26 18:30:00', '1', 'asfd', 'asf', 13);
+
+--
+-- Disparadores `events`
+--
+DELIMITER $$
+CREATE TRIGGER `after_event_insert` AFTER INSERT ON `events` FOR EACH ROW BEGIN
+    INSERT INTO historial (evento_id, titulo, inicio, fin, descripcion, empleados, clientes, iduser, accion)
+    VALUES (NEW.id, NEW.title, NEW.start, NEW.end, NEW.description, NEW.employees, NEW.clients, NEW.iduser, 'INSERT');
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `after_event_update` AFTER UPDATE ON `events` FOR EACH ROW BEGIN
+    IF (NEW.title <> OLD.title OR 
+        NEW.start <> OLD.start OR 
+        NEW.end <> OLD.end OR 
+        NEW.description <> OLD.description OR 
+        NEW.employees <> OLD.employees OR 
+        NEW.clients <> OLD.clients OR
+        NEW.iduser <> OLD.iduser) THEN
+        INSERT INTO historial (evento_id, iduser, titulo, inicio, fin, descripcion, empleados, clientes, accion)
+        VALUES (NEW.id, NEW.iduser, NEW.title, NEW.start, NEW.end, NEW.description, NEW.employees, NEW.clients, 'UPDATE');
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `historial`
+--
+
+CREATE TABLE `historial` (
+  `id` int(11) NOT NULL,
+  `evento_id` int(11) NOT NULL,
+  `titulo` varchar(255) NOT NULL,
+  `inicio` datetime NOT NULL,
+  `fin` datetime NOT NULL,
+  `descripcion` text DEFAULT NULL,
+  `empleados` text DEFAULT NULL,
+  `clientes` text DEFAULT NULL,
+  `accion` varchar(10) NOT NULL,
+  `fecha_insercion` timestamp NOT NULL DEFAULT current_timestamp(),
+  `iduser` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `historial`
+--
+
+INSERT INTO `historial` (`id`, `evento_id`, `titulo`, `inicio`, `fin`, `descripcion`, `empleados`, `clientes`, `accion`, `fecha_insercion`, `iduser`) VALUES
+(1, 1, 'asdfsf', '2024-09-26 12:00:00', '2024-09-26 18:30:00', '1', 'asfd', 'asf', 'INSERT', '2024-09-25 14:15:26', 9),
+(2, 1, 'asdfsf3', '2024-09-26 12:00:00', '2024-09-26 18:30:00', '1', 'asfd', 'asf', 'UPDATE', '2024-09-25 14:37:54', 13);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `salas`
+--
+
+CREATE TABLE `salas` (
+  `sala_id` int(11) NOT NULL,
+  `nombre` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `users`
+--
+
+CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL,
+  `user` varchar(50) NOT NULL,
+  `pass` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `users`
+--
+
+INSERT INTO `users` (`user_id`, `user`, `pass`) VALUES
+(6, 'javi', '$2y$10$zehZhyNu/i04GgQvTZdEUOZ.D9NGdYd0ici7UV6inhkYxYhDYn1dK'),
+(9, 'dino', '$2y$10$Kx9yjlbZhMuGfSq.idMuOeoAfzg.dZmAK2yPtFqR9SP2So1buGyzW'),
+(13, 'jaime', '$2y$10$FBgcQh1cGnBZc3smhNoNEubzk4T6cqMgQjMhfffP8RGXj6o3l9kQa');
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `events`
+--
+ALTER TABLE `events`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `historial`
+--
+ALTER TABLE `historial`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `salas`
+--
+ALTER TABLE `salas`
+  ADD PRIMARY KEY (`sala_id`);
+
+--
+-- Indices de la tabla `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `user` (`user`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `events`
+--
+ALTER TABLE `events`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `historial`
+--
+ALTER TABLE `historial`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `salas`
+--
+ALTER TABLE `salas`
+  MODIFY `sala_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `users`
+--
+ALTER TABLE `users`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
