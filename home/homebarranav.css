@@ -1,0 +1,119 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ececec;
+}
+
+header {
+    background-color: #6d7a80;
+    padding: 10px 0;
+}
+
+.navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+}
+
+.nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.nav-links li {
+    margin: 0 35px;
+}
+
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 10px 15px;
+    display: block;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    border-radius: 4px;
+}
+
+.nav-links a:hover {
+    background-color: #0056b3;
+    color: #ffffff;
+    transform: translateY(-1px)
+}
+
+.nav-links a.active {
+    background-color: #0056b3;
+    color: #ffffff;
+    transform: translateY(1px)
+}
+
+a{
+    color: black;
+    text-decoration:none;
+}
+.fc-day-today {
+    background-color: unset !important;
+}
+
+.fc-day-today {
+    background-color: #3080a546 !important;
+}
+.fc-timegrid-col-events{
+    margin-left: 40px !important;
+    margin-right: 0px !important;
+}
+
+.fc-timegrid-now-indicator-arrow {
+    width: 5px !important;
+    height: 5px !important;
+    background-color: #3a93f34b !important;  /* Color de fondo azul */
+    border-radius: 10% !important;         /* Bordes completamente redondeados para formar un círculo */
+    border-color: #ffffff00 !important;
+    margin-top: -4px !important;
+
+}
+.fc-timegrid-now-indicator-line {
+    background-color: #3a93f356 !important;
+    height: 3px !important;           /* Cambia el grosor de la línea */
+    border: none !important;          /* Elimina cualquier borde adicional */
+    opacity: 0.8 !important;          /* Ajusta la transparencia de la línea */
+}
+.fc-day-sun{
+    background-color: rgb(203, 213, 218) !important;
+    width: 100px;
+}
+.fc-day-sat{
+    background-color: rgb(203, 213, 218) !important;
+    width: 100px;
+}
+.fc-day-today {
+    background-color: rgb(223, 233, 238) !important; /* Verde lima */
+  }
+  .fc-col-header-cell{
+    background-color: rgb(178, 198, 207) !important;
+}
+.modal-content {
+    
+    margin-top: 30px !important;
+}
+.modal-dialog {
+    max-width: 800px !important; /* Máximo ancho del modal */
+    width: 100% !important; /* Asegura que el modal use todo el ancho disponible */
+    margin: 0 auto !important; /* Centra el modal en el contenedor */
+}
+.fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events {
+    min-height: 5em !important;
+  }
+.popover {
+    z-index: 9999 !important;
+}
+.fc-v-event{
+    border: #a6a6a65e !important;
+}
+.fc-button-primary:disabled{
+    background-color: #6d7a80 !important;
+    border-color: #6d7a80 !important;
+}

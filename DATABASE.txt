@@ -1,0 +1,383 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 17-10-2024 a las 16:17:36
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de datos: `reservas`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `events`
+--
+
+CREATE TABLE `events` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `start` datetime NOT NULL,
+  `end` datetime DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `employees` text DEFAULT NULL,
+  `clients` text DEFAULT NULL,
+  `iduser` int(11) DEFAULT NULL,
+  `observations` varchar(125) DEFAULT NULL,
+  `color` varchar(30) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `events`
+--
+
+INSERT INTO `events` (`id`, `title`, `start`, `end`, `description`, `employees`, `clients`, `iduser`, `observations`, `color`) VALUES
+(6, 'evento', '2024-09-25 13:00:00', '2024-09-25 14:00:00', '2', '', '', 13, '', NULL),
+(8, 'fasdf', '2024-09-26 07:30:00', '2024-09-26 08:30:00', '2', '', '', 13, '', NULL),
+(9, 'afs', '2024-09-26 08:30:00', '2024-09-26 09:00:00', '2', '', '', 13, '', NULL),
+(10, 'fasdf', '2024-09-26 10:30:00', '2024-09-26 13:00:00', '2', '', '', 13, '', NULL),
+(11, 'fasdf', '2024-09-26 13:30:00', '2024-09-26 16:00:00', '2', '', '', 13, '', NULL),
+(12, 'asfdasd', '2024-09-26 17:00:00', '2024-09-26 20:30:00', '2', '', '', 13, '', NULL),
+(13, 'asdfasdf evento', '2024-09-26 16:00:00', '2024-09-26 17:00:00', '1', '', '', 13, '', NULL),
+(14, 'fasdfasd conferencia', '2024-09-26 13:00:00', '2024-09-26 13:30:00', '1 y 2', '', '', 13, '', NULL),
+(15, 'fasdf', '2024-09-26 19:30:00', '2024-09-26 23:00:00', '1', '', '', 13, '', NULL),
+(16, 'entrevista conferencia reunión lhgfaihsg', '2024-09-27 12:30:00', '2024-09-27 17:00:00', '1 y 2', 'fasdfasf', 'fasdfa', 13, 'fasdfasfd', NULL),
+(17, 'dos', '2024-10-14 10:00:00', '2024-10-14 11:30:00', '2', '999', '00', 13, 'ggggg', 'rgb(192, 57, 43)'),
+(18, 'fasdfas', '2024-09-30 12:30:00', '2024-09-30 13:01:00', '2', 'fasdf', 'fasdfa', 13, 'ffasf', NULL),
+(22, 'conferencia conferencia conferencia conferencia', '2024-10-07 09:00:00', '2024-10-07 17:00:00', '2', 'fasdfasf', 'fasdfasdf', 13, 'fasdfasd', NULL),
+(23, 'fasfsffafasfsffafasfsffafasfsffafasfsffafasfsffafa', '2024-10-07 18:00:00', '2024-10-07 20:30:00', '1', 'fasdfasf', 'afsdasdf', 13, 'dasd', NULL),
+(24, 'uno', '2024-10-14 07:30:00', '2024-10-14 09:00:00', '1', '', '', 20, '', NULL),
+(25, 'tres', '2024-10-14 13:00:00', '2024-10-14 15:00:00', '3', '', '', 20, '', NULL),
+(26, 'cuatro', '2024-10-14 16:00:00', '2024-10-14 18:00:00', '4', '', '', 20, '', NULL),
+(27, 'cinco', '2024-10-14 18:30:00', '2024-10-14 20:30:00', '5', '', '', 20, '', NULL),
+(28, 'seis', '2024-10-14 21:30:00', '2024-10-14 23:30:00', '6', '', '', 20, '', NULL),
+(29, 'siete', '2024-10-15 07:30:00', '2024-10-15 09:00:00', '7', '', '', 20, '', NULL),
+(30, 'ocho', '2024-10-15 10:00:00', '2024-10-15 12:00:00', '8', '', '', 20, '', NULL),
+(31, 'nueve', '2024-10-15 13:00:00', '2024-10-15 15:00:00', '9', '', '', 20, '', NULL);
+
+--
+-- Disparadores `events`
+--
+DELIMITER $$
+CREATE TRIGGER `after_event_insert` AFTER INSERT ON `events` FOR EACH ROW BEGIN
+    INSERT INTO historial (evento_id, titulo, inicio, fin, descripcion, empleados, clientes, iduser, observations, accion)
+    VALUES (NEW.id, NEW.title, NEW.start, NEW.end, NEW.description, NEW.employees, NEW.clients, NEW.iduser, NEW.observations, 'INSERT');
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `after_event_update` AFTER UPDATE ON `events` FOR EACH ROW BEGIN
+    IF (NEW.title <> OLD.title OR 
+        NEW.start <> OLD.start OR 
+        NEW.end <> OLD.end OR 
+        NEW.description <> OLD.description OR 
+        NEW.employees <> OLD.employees OR 
+        NEW.clients <> OLD.clients OR
+        NEW.iduser <> OLD.iduser OR
+       NEW.observations <> OLD.observations) THEN
+        INSERT INTO historial (evento_id, iduser, titulo, inicio, fin, descripcion, empleados, clientes, observations, accion)
+        VALUES (NEW.id, NEW.iduser, NEW.title, NEW.start, NEW.end, NEW.description, NEW.employees, NEW.clients, NEW.observations, 'UPDATE');
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `historial`
+--
+
+CREATE TABLE `historial` (
+  `id` int(11) NOT NULL,
+  `evento_id` int(11) NOT NULL,
+  `titulo` varchar(255) NOT NULL,
+  `inicio` datetime NOT NULL,
+  `fin` datetime NOT NULL,
+  `descripcion` text DEFAULT NULL,
+  `empleados` text DEFAULT NULL,
+  `clientes` text DEFAULT NULL,
+  `accion` varchar(10) NOT NULL,
+  `fecha_insercion` timestamp NOT NULL DEFAULT current_timestamp(),
+  `iduser` int(11) DEFAULT NULL,
+  `observations` varchar(125) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `historial`
+--
+
+INSERT INTO `historial` (`id`, `evento_id`, `titulo`, `inicio`, `fin`, `descripcion`, `empleados`, `clientes`, `accion`, `fecha_insercion`, `iduser`, `observations`) VALUES
+(1, 1, 'asdfsf', '2024-09-26 12:00:00', '2024-09-26 18:30:00', '1', 'asfd', 'asf', 'INSERT', '2024-09-25 14:15:26', 9, NULL),
+(2, 1, 'asdfsf3', '2024-09-26 12:00:00', '2024-09-26 18:30:00', '1', 'asfd', 'asf', 'UPDATE', '2024-09-25 14:37:54', 13, NULL),
+(3, 2, '1234', '2024-09-26 17:00:00', '2024-09-26 21:30:00', '2', '12341234', '12341234', 'INSERT', '2024-09-26 08:56:38', 13, NULL),
+(4, 2, '1234', '2024-09-26 17:00:00', '2024-09-26 21:30:00', '2', '12341234', '12341234', 'UPDATE', '2024-09-26 09:00:21', 13, '43211'),
+(5, 3, 'papaya evento conferencia entrevista', '2024-09-26 20:00:00', '2024-09-26 23:30:00', '1', 'afsdfa', 'fasdf', 'INSERT', '2024-09-26 10:41:39', 13, 'erasf'),
+(6, 3, 'papaya evento conferencia entrevista entrevista entrevista entrevista entrevista entrevista entrevista entrevista', '2024-09-26 20:00:00', '2024-09-26 23:30:00', '1', 'afsdfa', 'fasdf', 'UPDATE', '2024-09-26 10:43:08', 13, 'erasf'),
+(7, 3, 'papaya evento', '2024-09-26 20:00:00', '2024-09-26 23:30:00', '1', 'afsdfa', 'fasdf', 'UPDATE', '2024-09-26 10:47:03', 13, 'erasf'),
+(8, 3, 'papaya evento entrevista hola', '2024-09-26 20:00:00', '2024-09-26 23:30:00', '1', 'afsdfa', 'fasdf', 'UPDATE', '2024-09-26 11:12:48', 13, 'erasf'),
+(9, 3, 'conferencia conferencia conferencia conferencia', '2024-09-26 20:00:00', '2024-09-26 23:30:00', '1', 'afsdfa', 'fasdf', 'UPDATE', '2024-09-26 11:26:47', 13, 'erasf'),
+(10, 3, 'conferencia ', '2024-09-26 20:00:00', '2024-09-26 23:30:00', '1', 'afsdfa', 'fasdf', 'UPDATE', '2024-09-26 13:07:22', 13, 'erasf'),
+(11, 3, 'conferencia presentación presentación', '2024-09-26 20:00:00', '2024-09-26 23:30:00', '1', 'afsdfa', 'fasdf', 'UPDATE', '2024-09-26 13:07:58', 13, 'erasf'),
+(12, 3, 'conferencia serbyte', '2024-09-26 20:00:00', '2024-09-26 23:30:00', '1', 'afsdfa', 'fasdf', 'UPDATE', '2024-09-26 13:08:59', 13, 'erasf'),
+(13, 3, 'conferencia serbytedasfsdfasdfasdfasdfasdfasdfasdf', '2024-09-26 20:00:00', '2024-09-26 23:30:00', '1', 'afsdfa', 'fasdf', 'UPDATE', '2024-09-26 13:10:34', 13, 'erasf'),
+(14, 4, 'entrevista juan', '2024-09-26 17:00:00', '2024-09-26 20:30:00', '2', 'pedro', '', 'INSERT', '2024-09-26 13:15:04', 13, 'tiene experiencia'),
+(15, 5, 'evento entrevista', '2024-09-25 13:30:00', '2024-09-25 14:00:00', '2', '', '', 'INSERT', '2024-09-26 13:30:13', 13, ''),
+(16, 6, 'evento', '2024-09-25 13:00:00', '2024-09-25 14:00:00', '2', '', '', 'INSERT', '2024-09-26 13:30:34', 13, ''),
+(17, 3, 'conferencia serbytedasfsdfasdfasdfasdfasdfasdfasdf', '2024-09-26 20:00:00', '2024-09-26 23:30:00', '1', 'afsdfa', 'fasdf', 'UPDATE', '2024-09-26 13:34:21', 13, 'erasfs'),
+(18, 7, 'evento', '2024-09-26 09:30:00', '2024-09-26 14:00:00', '2', 'fasd', '', 'INSERT', '2024-09-26 15:36:24', 13, 'afsdf'),
+(19, 8, 'fasdf', '2024-09-26 07:30:00', '2024-09-26 08:30:00', '2', '', '', 'INSERT', '2024-09-26 15:36:32', 13, ''),
+(20, 9, 'afs', '2024-09-26 08:30:00', '2024-09-26 09:00:00', '2', '', '', 'INSERT', '2024-09-26 15:36:38', 13, ''),
+(21, 10, 'fasdf', '2024-09-26 10:30:00', '2024-09-26 13:00:00', '2', '', '', 'INSERT', '2024-09-26 15:45:44', 13, ''),
+(22, 11, 'fasdf', '2024-09-26 13:30:00', '2024-09-26 16:00:00', '2', '', '', 'INSERT', '2024-09-26 15:45:47', 13, ''),
+(23, 12, 'asfdasd', '2024-09-26 17:00:00', '2024-09-26 20:30:00', '2', '', '', 'INSERT', '2024-09-26 15:45:52', 13, ''),
+(24, 13, 'asdfasdf evento', '2024-09-26 16:00:00', '2024-09-26 17:00:00', '1', '', '', 'INSERT', '2024-09-26 16:15:11', 13, ''),
+(25, 14, 'fasdfasd conferencia', '2024-09-26 13:00:00', '2024-09-26 13:30:00', '1 y 2', '', '', 'INSERT', '2024-09-26 16:15:22', 13, ''),
+(26, 15, 'fasdf', '2024-09-26 19:30:00', '2024-09-26 23:00:00', '1', '', '', 'INSERT', '2024-09-26 16:15:31', 13, ''),
+(27, 9, 'afs', '2024-09-26 08:30:00', '2024-09-26 09:00:00', '1', '', '', 'UPDATE', '2024-09-27 09:20:02', 13, ''),
+(28, 9, 'afs', '2024-09-26 08:30:00', '2024-09-26 09:00:00', '2', '', '', 'UPDATE', '2024-09-27 09:34:43', 13, ''),
+(29, 16, 'fasdf reunión', '2024-09-27 12:30:00', '2024-09-27 17:00:00', '1, 2', 'fasdfasf', 'fasdfa', 'INSERT', '2024-09-27 09:34:57', 13, 'fasdfasfd'),
+(30, 16, 'fasdf reunión', '2024-09-27 12:30:00', '2024-09-27 17:00:00', '1 y 2', 'fasdfasf', 'fasdfa', 'UPDATE', '2024-09-27 12:19:04', 13, 'fasdfasfd'),
+(31, 16, 'fasdf reunión', '2024-09-27 12:30:00', '2024-09-27 17:00:00', '1, 2 y 3', 'fasdfasf', 'fasdfa', 'UPDATE', '2024-09-27 12:19:44', 13, 'fasdfasfd'),
+(32, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1', '999', '00', 'INSERT', '2024-09-30 16:16:01', 13, 'ggggg'),
+(33, 16, 'fasdf reunión', '2024-09-27 12:30:00', '2024-09-27 17:00:00', '1 y 2', 'fasdfasf', 'fasdfa', 'UPDATE', '2024-10-01 08:30:50', 13, 'fasdfasfd'),
+(34, 16, 'entrevista conferencia reunión lhgfaihsg', '2024-09-27 12:30:00', '2024-09-27 17:00:00', '1 y 2', 'fasdfasf', 'fasdfa', 'UPDATE', '2024-10-01 08:32:56', 13, 'fasdfasfd'),
+(35, 18, 'fasdfas', '2024-09-25 12:30:00', '2024-09-25 13:00:00', '2', 'fasdf', 'fasdfa', 'INSERT', '2024-10-01 08:35:41', 13, 'ffasf'),
+(36, 18, 'fasdfas', '2024-09-29 12:30:00', '2024-09-29 13:01:00', '2', 'fasdf', 'fasdfa', 'UPDATE', '2024-10-01 08:36:12', 13, 'ffasf'),
+(37, 18, 'fasdfas', '2024-09-30 12:30:00', '2024-09-30 13:01:00', '2', 'fasdf', 'fasdfa', 'UPDATE', '2024-10-01 08:38:40', 13, 'ffasf'),
+(38, 19, 'joju', '2024-10-03 09:30:00', '2024-10-03 16:30:00', '', '', '', 'INSERT', '2024-10-03 11:08:12', 13, ''),
+(39, 20, 'joju', '2024-10-03 09:30:00', '2024-10-03 16:30:00', '3', '', '', 'INSERT', '2024-10-03 11:08:16', 13, ''),
+(40, 21, 'afsdfas', '2024-10-21 07:00:00', '2024-10-21 07:30:00', '2', 'fasdfasfd', 'asfdfasf', 'INSERT', '2024-10-03 11:09:11', 13, 'afsdf'),
+(41, 22, 'conferencia conferencia conferencia conferencia', '2024-10-07 09:00:00', '2024-10-07 17:00:00', '2', 'fasdfasf', 'fasdfasdf', 'INSERT', '2024-10-07 14:46:46', 13, 'fasdfasd'),
+(42, 23, 'fasfsffafasfsffafasfsffafasfsffafasfsffafasfsffafa', '2024-10-07 18:00:00', '2024-10-07 20:30:00', '1', 'fasdfasf', 'afsdasdf', 'INSERT', '2024-10-07 14:47:28', 13, 'dasd'),
+(43, 23, 'fasfsffafasfsffafasfsffafasfsffafasfsffafasfsffafa', '2024-10-07 18:00:00', '2024-10-07 20:30:00', '1 y 2', 'fasdfasf', 'afsdasdf', 'UPDATE', '2024-10-14 10:58:15', 13, 'dasd'),
+(44, 23, 'fasfsffafasfsffafasfsffafasfsffafasfsffafasfsffafa', '2024-10-07 18:00:00', '2024-10-07 20:30:00', '2', 'fasdfasf', 'afsdasdf', 'UPDATE', '2024-10-14 10:58:22', 13, 'dasd'),
+(45, 23, 'fasfsffafasfsffafasfsffafasfsffafasfsffafasfsffafa', '2024-10-07 18:00:00', '2024-10-07 20:30:00', '2 y 3', 'fasdfasf', 'afsdasdf', 'UPDATE', '2024-10-14 10:58:26', 13, 'dasd'),
+(46, 23, 'fasfsffafasfsffafasfsffafasfsffafasfsffafasfsffafa', '2024-10-07 18:00:00', '2024-10-07 20:30:00', '1, 2 y 3', 'fasdfasf', 'afsdasdf', 'UPDATE', '2024-10-14 10:58:32', 13, 'dasd'),
+(47, 23, 'fasfsffafasfsffafasfsffafasfsffafasfsffafasfsffafa', '2024-10-07 18:00:00', '2024-10-07 20:30:00', '1 y 2', 'fasdfasf', 'afsdasdf', 'UPDATE', '2024-10-14 10:58:36', 13, 'dasd'),
+(48, 23, 'fasfsffafasfsffafasfsffafasfsffafasfsffafasfsffafa', '2024-10-07 18:00:00', '2024-10-07 20:30:00', '1', 'fasdfasf', 'afsdasdf', 'UPDATE', '2024-10-14 10:58:40', 13, 'dasd'),
+(49, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1 y 2', '999', '00', 'UPDATE', '2024-10-14 11:05:07', 13, 'ggggg'),
+(50, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2 y 3', '999', '00', 'UPDATE', '2024-10-14 11:05:12', 13, 'ggggg'),
+(51, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '2 y 3', '999', '00', 'UPDATE', '2024-10-14 11:05:15', 13, 'ggggg'),
+(52, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1 y 2', '999', '00', 'UPDATE', '2024-10-14 11:05:19', 13, 'ggggg'),
+(53, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2 y 3', '999', '00', 'UPDATE', '2024-10-14 11:05:26', 13, 'ggggg'),
+(54, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '2 y 3', '999', '00', 'UPDATE', '2024-10-14 11:05:28', 13, 'ggggg'),
+(55, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1 y 2', '999', '00', 'UPDATE', '2024-10-14 11:05:42', 13, 'ggggg'),
+(56, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2, 3, 4, 5, 6, 7, 8 y 9', '999', '00', 'UPDATE', '2024-10-14 11:13:41', 13, 'ggggg'),
+(57, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '8 y 9', '999', '00', 'UPDATE', '2024-10-14 11:13:46', 13, 'ggggg'),
+(58, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '8', '999', '00', 'UPDATE', '2024-10-14 11:13:56', 13, 'ggggg'),
+(59, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1', '999', '00', 'UPDATE', '2024-10-14 11:14:01', 13, 'ggggg'),
+(60, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1 y 2', '999', '00', 'UPDATE', '2024-10-14 11:14:06', 13, 'ggggg'),
+(61, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '8 y 9', '999', '00', 'UPDATE', '2024-10-14 11:14:12', 13, 'ggggg'),
+(62, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '8', '999', '00', 'UPDATE', '2024-10-14 11:17:29', 13, 'ggggg'),
+(63, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '6 y 7', '999', '00', 'UPDATE', '2024-10-14 11:17:38', 13, 'ggggg'),
+(64, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1 y 2', '999', '00', 'UPDATE', '2024-10-14 11:17:41', 13, 'ggggg'),
+(65, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '2', '999', '00', 'UPDATE', '2024-10-14 11:21:25', 13, 'ggggg'),
+(66, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1 y 2', '999', '00', 'UPDATE', '2024-10-14 11:21:28', 13, 'ggggg'),
+(67, 23, 'fasfsffafasfsffafasfsffafasfsffafasfsffafasfsffafa', '2024-10-07 18:00:00', '2024-10-07 20:30:00', '2', 'fasdfasf', 'afsdasdf', 'UPDATE', '2024-10-14 11:21:39', 13, 'dasd'),
+(68, 23, 'fasfsffafasfsffafasfsffafasfsffafasfsffafasfsffafa', '2024-10-07 18:00:00', '2024-10-07 20:30:00', '1', 'fasdfasf', 'afsdasdf', 'UPDATE', '2024-10-14 11:21:42', 13, 'dasd'),
+(69, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '8', '999', '00', 'UPDATE', '2024-10-14 11:22:31', 13, 'ggggg'),
+(70, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1 y 9', '999', '00', 'UPDATE', '2024-10-14 11:22:41', 13, 'ggggg'),
+(71, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2 y 3', '999', '00', 'UPDATE', '2024-10-14 11:22:50', 13, 'ggggg'),
+(72, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1 y 2', '999', '00', 'UPDATE', '2024-10-14 11:25:44', 13, 'ggggg'),
+(73, 23, 'fasfsffafasfsffafasfsffafasfsffafasfsffafasfsffafa', '2024-10-07 18:00:00', '2024-10-07 20:30:00', '2', 'fasdfasf', 'afsdasdf', 'UPDATE', '2024-10-14 11:26:31', 13, 'dasd'),
+(74, 23, 'fasfsffafasfsffafasfsffafasfsffafasfsffafasfsffafa', '2024-10-07 18:00:00', '2024-10-07 20:30:00', '1', 'fasdfasf', 'afsdasdf', 'UPDATE', '2024-10-14 11:26:34', 13, 'dasd'),
+(75, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2, 3 y 4', '999', '00', 'UPDATE', '2024-10-14 11:26:43', 13, 'ggggg'),
+(76, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2, 3, 4, 5, 6, 7 y 8', '999', '00', 'UPDATE', '2024-10-14 11:26:47', 13, 'ggggg'),
+(77, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '2, 3 y 4', '999', '00', 'UPDATE', '2024-10-14 11:26:51', 13, 'ggggg'),
+(78, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '8 y 9', '999', '00', 'UPDATE', '2024-10-14 11:26:56', 13, 'ggggg'),
+(79, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '2, 4, 6 y 7', '999', '00', 'UPDATE', '2024-10-14 11:41:37', 13, 'ggggg'),
+(80, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1 y 2', '999', '00', 'UPDATE', '2024-10-14 11:48:24', 13, 'ggggg'),
+(81, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2 y 3', '999', '00', 'UPDATE', '2024-10-14 11:48:28', 13, 'ggggg'),
+(82, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1', '999', '00', 'UPDATE', '2024-10-14 11:48:32', 13, 'ggggg'),
+(83, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1 y 2', '999', '00', 'UPDATE', '2024-10-14 11:48:35', 13, 'ggggg'),
+(84, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '9', '999', '00', 'UPDATE', '2024-10-14 11:48:49', 13, 'ggggg'),
+(85, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '4', '999', '00', 'UPDATE', '2024-10-14 11:48:52', 13, 'ggggg'),
+(86, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '5', '999', '00', 'UPDATE', '2024-10-14 11:48:57', 13, 'ggggg'),
+(87, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '6', '999', '00', 'UPDATE', '2024-10-14 11:49:03', 13, 'ggggg'),
+(88, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '6 y 7', '999', '00', 'UPDATE', '2024-10-14 11:51:28', 13, 'ggggg'),
+(89, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '7 y 8', '999', '00', 'UPDATE', '2024-10-14 11:51:35', 13, 'ggggg'),
+(90, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '8 y 9', '999', '00', 'UPDATE', '2024-10-14 11:51:39', 13, 'ggggg'),
+(91, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2, 3, 4, 5, 6 y 7', '999', '00', 'UPDATE', '2024-10-14 11:51:46', 13, 'ggggg'),
+(92, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2, 3, 4, 5, 6, 7 y 8', '999', '00', 'UPDATE', '2024-10-14 11:51:51', 13, 'ggggg'),
+(93, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2 y 3', '999', '00', 'UPDATE', '2024-10-14 13:44:41', 13, 'ggggg'),
+(94, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2, 3 y 4', '999', '00', 'UPDATE', '2024-10-14 13:44:50', 13, 'ggggg'),
+(95, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2, 3, 4 y 5', '999', '00', 'UPDATE', '2024-10-14 13:44:55', 13, 'ggggg'),
+(96, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '2, 3, 4, 5 y 6', '999', '00', 'UPDATE', '2024-10-14 13:45:00', 13, 'ggggg'),
+(97, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '3, 4, 5, 6, 7, 8 y 9', '999', '00', 'UPDATE', '2024-10-14 13:45:03', 13, 'ggggg'),
+(98, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2, 3, 4, 5, 6, 7, 8 y 9', '999', '00', 'UPDATE', '2024-10-14 13:45:10', 13, 'ggggg'),
+(99, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '8 y 9', '999', '00', 'UPDATE', '2024-10-14 13:47:07', 13, 'ggggg'),
+(100, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2, 3 y 4', '999', '00', 'UPDATE', '2024-10-14 13:47:12', 13, 'ggggg'),
+(101, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1 y 2', '999', '00', 'UPDATE', '2024-10-14 13:47:15', 13, 'ggggg'),
+(102, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2 y 3', '999', '00', 'UPDATE', '2024-10-14 13:47:20', 13, 'ggggg'),
+(103, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2, 3, 4, 5, 6, 7 y 8', '999', '00', 'UPDATE', '2024-10-14 15:00:34', 13, 'ggggg'),
+(104, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2, 3, 4, 5, 6, 7, 8 y 9', '999', '00', 'UPDATE', '2024-10-14 15:00:39', 13, 'ggggg'),
+(105, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1 y 2', '999', '00', 'UPDATE', '2024-10-14 15:00:44', 13, 'ggggg'),
+(106, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1', '999', '00', 'UPDATE', '2024-10-15 07:57:55', 13, 'ggggg'),
+(107, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2', '999', '00', 'UPDATE', '2024-10-15 07:58:01', 13, 'ggggg'),
+(108, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '2', '999', '00', 'UPDATE', '2024-10-15 07:58:08', 13, 'ggggg'),
+(109, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2', '999', '00', 'UPDATE', '2024-10-15 07:58:34', 13, 'ggggg'),
+(110, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '2, 3, 4', '999', '00', 'UPDATE', '2024-10-15 07:58:45', 13, 'ggggg'),
+(111, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2, 3, 4', '999', '00', 'UPDATE', '2024-10-15 07:58:53', 13, 'ggggg'),
+(112, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '6, 7, 9', '999', '00', 'UPDATE', '2024-10-15 08:01:28', 13, 'ggggg'),
+(113, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '5, 6, 7, 8, 9', '999', '00', 'UPDATE', '2024-10-15 08:01:40', 13, 'ggggg'),
+(114, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1, 2, 3, 4, 5, 6, 7, 8, 9', '999', '00', 'UPDATE', '2024-10-15 08:01:57', 13, 'ggggg'),
+(115, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '2, 3, 4, 5, 6, 8', '999', '00', 'UPDATE', '2024-10-15 08:02:12', 13, 'ggggg'),
+(116, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '8', '999', '00', 'UPDATE', '2024-10-15 08:02:25', 13, 'ggggg'),
+(117, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '1', '999', '00', 'UPDATE', '2024-10-15 08:02:31', 13, 'ggggg'),
+(118, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '4', '999', '00', 'UPDATE', '2024-10-15 08:36:39', 13, 'ggggg'),
+(119, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '3', '999', '00', 'UPDATE', '2024-10-15 08:36:46', 13, 'ggggg'),
+(120, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '5', '999', '00', 'UPDATE', '2024-10-15 08:36:52', 13, 'ggggg'),
+(121, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '6', '999', '00', 'UPDATE', '2024-10-15 08:36:58', 13, 'ggggg'),
+(122, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '7', '999', '00', 'UPDATE', '2024-10-15 08:37:04', 13, 'ggggg'),
+(123, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '8', '999', '00', 'UPDATE', '2024-10-15 08:37:09', 13, 'ggggg'),
+(124, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '9', '999', '00', 'UPDATE', '2024-10-15 08:37:16', 13, 'ggggg'),
+(125, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '6', '999', '00', 'UPDATE', '2024-10-15 08:43:43', 13, 'ggggg'),
+(126, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '7', '999', '00', 'UPDATE', '2024-10-15 08:43:49', 13, 'ggggg'),
+(127, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '8', '999', '00', 'UPDATE', '2024-10-15 08:44:03', 13, 'ggggg'),
+(128, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '7', '999', '00', 'UPDATE', '2024-10-15 08:44:09', 13, 'ggggg'),
+(129, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '6', '999', '00', 'UPDATE', '2024-10-15 08:44:14', 13, 'ggggg'),
+(130, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '9', '999', '00', 'UPDATE', '2024-10-15 08:44:20', 13, 'ggggg'),
+(131, 17, 'entrevista reunión', '2024-10-14 10:00:00', '2024-10-14 19:00:00', '2', '999', '00', 'UPDATE', '2024-10-15 08:44:26', 13, 'ggggg'),
+(132, 24, 'uno', '2024-10-14 07:30:00', '2024-10-14 09:00:00', '1', '', '', 'INSERT', '2024-10-17 07:17:02', 20, ''),
+(133, 17, 'dos', '2024-10-14 10:00:00', '2024-10-14 12:00:00', '2', '999', '00', 'UPDATE', '2024-10-17 07:17:19', 20, 'ggggg'),
+(134, 25, 'tres', '2024-10-14 13:00:00', '2024-10-14 15:00:00', '3', '', '', 'INSERT', '2024-10-17 07:17:29', 20, ''),
+(135, 26, 'cuatro', '2024-10-14 16:00:00', '2024-10-14 18:00:00', '4', '', '', 'INSERT', '2024-10-17 07:17:39', 20, ''),
+(136, 27, 'cinco', '2024-10-14 18:30:00', '2024-10-14 20:30:00', '5', '', '', 'INSERT', '2024-10-17 07:17:50', 20, ''),
+(137, 28, 'seis', '2024-10-14 21:30:00', '2024-10-14 23:30:00', '6', '', '', 'INSERT', '2024-10-17 07:18:02', 20, ''),
+(138, 29, 'siete', '2024-10-15 07:30:00', '2024-10-15 09:00:00', '7', '', '', 'INSERT', '2024-10-17 07:18:13', 20, ''),
+(139, 30, 'ocho', '2024-10-15 10:00:00', '2024-10-15 12:00:00', '8', '', '', 'INSERT', '2024-10-17 07:18:23', 20, ''),
+(140, 31, 'nueve', '2024-10-15 13:00:00', '2024-10-15 15:00:00', '9', '', '', 'INSERT', '2024-10-17 07:18:32', 20, ''),
+(141, 30, 'ocho', '2024-10-15 10:00:00', '2024-10-15 12:00:00', '4 y 8', '', '', 'UPDATE', '2024-10-17 07:53:53', 20, ''),
+(142, 30, 'ocho', '2024-10-15 10:00:00', '2024-10-15 12:00:00', '1 y 2', '', '', 'UPDATE', '2024-10-17 07:53:56', 20, ''),
+(143, 30, 'ocho', '2024-10-15 10:00:00', '2024-10-15 12:00:00', '1, 2 y 3', '', '', 'UPDATE', '2024-10-17 07:54:03', 20, ''),
+(144, 30, 'ocho', '2024-10-15 10:00:00', '2024-10-15 12:00:00', '1, 5 y 8', '', '', 'UPDATE', '2024-10-17 07:54:13', 20, ''),
+(145, 30, 'ocho', '2024-10-15 10:00:00', '2024-10-15 12:00:00', '1 y 2', '', '', 'UPDATE', '2024-10-17 07:54:17', 20, ''),
+(146, 30, 'ocho', '2024-10-15 10:00:00', '2024-10-15 12:00:00', '8', '', '', 'UPDATE', '2024-10-17 07:55:10', 20, ''),
+(147, 17, 'dos', '2024-10-14 10:00:00', '2024-10-14 10:01:00', '2', '999', '00', 'UPDATE', '2024-10-17 12:15:48', 13, 'ggggg'),
+(148, 17, 'dos', '2024-10-14 10:00:00', '2024-10-14 10:30:00', '2', '999', '00', 'UPDATE', '2024-10-17 12:15:58', 13, 'ggggg'),
+(149, 17, 'dos', '2024-10-14 10:00:00', '2024-10-14 11:30:00', '2', '999', '00', 'UPDATE', '2024-10-17 12:16:12', 13, 'ggggg');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `salas`
+--
+
+CREATE TABLE `salas` (
+  `sala_id` int(11) NOT NULL,
+  `nombre` varchar(50) NOT NULL,
+  `color` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `salas`
+--
+
+INSERT INTO `salas` (`sala_id`, `nombre`, `color`) VALUES
+(1, '1', 'rgb(41, 128, 185)'),
+(2, '2', 'rgb(192, 57, 43)'),
+(3, '3', 'rgb(46, 204, 113)'),
+(4, '4', 'rgb(39, 174, 96)'),
+(5, '5', 'rgb(142, 68, 173)'),
+(6, '6', 'rgb(52, 73, 94)'),
+(7, '7', 'rgb(22, 160, 133)'),
+(8, '8', 'rgb(44, 62, 80)'),
+(9, '9', 'rgb(231, 76, 60)');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `users`
+--
+
+CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL,
+  `user` varchar(50) NOT NULL,
+  `pass` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `users`
+--
+
+INSERT INTO `users` (`user_id`, `user`, `pass`) VALUES
+(6, 'javi', '$2y$10$zehZhyNu/i04GgQvTZdEUOZ.D9NGdYd0ici7UV6inhkYxYhDYn1dK'),
+(9, 'dino', '$2y$10$Kx9yjlbZhMuGfSq.idMuOeoAfzg.dZmAK2yPtFqR9SP2So1buGyzW'),
+(13, 'jaime', '$2y$10$FBgcQh1cGnBZc3smhNoNEubzk4T6cqMgQjMhfffP8RGXj6o3l9kQa'),
+(20, 'a', '$2y$10$/BYC6k19UnpkQLR4v/O/GuAACInd8XEkVTltWbA8pVVf5ZDOukVCq');
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `events`
+--
+ALTER TABLE `events`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `historial`
+--
+ALTER TABLE `historial`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `salas`
+--
+ALTER TABLE `salas`
+  ADD PRIMARY KEY (`sala_id`);
+
+--
+-- Indices de la tabla `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `user` (`user`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `events`
+--
+ALTER TABLE `events`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+
+--
+-- AUTO_INCREMENT de la tabla `historial`
+--
+ALTER TABLE `historial`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=150;
+
+--
+-- AUTO_INCREMENT de la tabla `salas`
+--
+ALTER TABLE `salas`
+  MODIFY `sala_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT de la tabla `users`
+--
+ALTER TABLE `users`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
