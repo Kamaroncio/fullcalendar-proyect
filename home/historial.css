@@ -1,0 +1,96 @@
+.table-wrapper {
+    margin-top: 50px;
+    width: 80%;
+    border-radius: 8px; /* Bordes redondeados */
+    overflow: hidden; /* Evita que las esquinas redondeadas sean cortadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Añade sombra sutil */
+}
+
+#tablahistorial {
+    border-collapse: collapse; /* Colapsar bordes internos */
+    width: 100%; /* Ajusta la tabla al 100% del wrapper */
+    table-layout: fixed;
+}
+
+th, td {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    text-align: center;
+    word-wrap: break-word; /* Permite el ajuste de texto largo */
+    word-break: break-all; /* Rompe palabras largas */
+    hyphens: auto; /* Inserta guiones automáticamente para palabras largas */
+}
+
+th {
+    background-color: #6d7a80;
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+td {
+    background-color: #eef0f5;
+    color: #333;
+}
+
+tr:nth-child(even) td {
+    background-color: #d8dce6;
+}
+
+input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
+    border-color: #6d7a80;
+}
+
+.more-info-btn {
+    background-color: #6d7a80;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.more-info-btn:hover {
+    background-color: #5a686e;
+}
+.detalle-info {
+    background-color: #eef0f5; /* Fondo claro */
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+}
+
+.detalle-tabla {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.detalle-tabla td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #d8dce6;
+    color: #333;
+}
+
+.detalle-tabla td:first-child {
+    font-weight: bold;
+    text-align: right;
+    width: 30%;
+}
+
+.detalle-tabla td:last-child {
+    text-align: left;
+    width: 70%;
+}
