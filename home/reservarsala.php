@@ -78,7 +78,7 @@ include('checkuserlogin.php');
                                 });
                             </script>
                             <div class="mb-3">
-                                <label for="eventObservations" class="form-label">Observaciones faf</label>
+                                <label for="eventObservations" class="form-label">Observaciones</label>
                                 <textarea class="form-control" id="eventObservations" rows="3" maxlength="124" placeholder="Añade observaciones aquí..."></textarea>
                             </div>
                             <div class="mb-3">
