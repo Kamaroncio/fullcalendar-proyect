@@ -53,8 +53,8 @@ try {
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($historial as $evento): ?>
-                    <tr>
+                <?php foreach ($historial as $index => $evento): ?>
+                    <tr class="fila-historial">
                         <td><?php echo htmlspecialchars($evento['evento_id']); ?></td>
                         <td><?php echo htmlspecialchars($evento['titulo']); ?></td>
                         <td><?php echo htmlspecialchars($evento['descripcion']); ?></td>
@@ -91,8 +91,12 @@ try {
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <br>
+        <button id="mostrarMas">Mostrar más</button>
+        <br><br><br><br>
     </div>
     </center>
     <script src="historial.js"></script>
 </body>
 </html>
+
