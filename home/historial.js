@@ -1,25 +1,35 @@
 document.querySelectorAll('.more-info-btn').forEach((button, index) => {
     button.addEventListener('click', function() {
         const hiddenRow = document.querySelectorAll('.oculto')[index];
+        const detailRows = hiddenRow.querySelectorAll('.detalle-tabla tr'); // Selecciona las filas dentro de la tabla de detalles
+        
         if (hiddenRow.style.display === 'none' || hiddenRow.style.display === '') {
-            hiddenRow.style.display = 'table-row';
+            hiddenRow.style.display = 'table-row'; // Muestra la fila oculta
             button.textContent = 'Menos';
+
+            // Mostrar las filas de detalle
+            detailRows.forEach(row => {
+                row.style.display = ''; // Asegura que las filas de detalle sean visibles
+            });
         } else {
-            hiddenRow.style.display = 'none';
+            hiddenRow.style.display = 'none'; // Oculta la fila
             button.textContent = 'Más';
+
+            // Ocultar las filas de detalle
+            detailRows.forEach(row => {
+                row.style.display = 'none'; // Oculta las filas de detalle
+            });
         }
+
+        // También asegurarse de que la fila padre se mantenga visible
+        const parentRow = button.closest('.fila-historial'); // Obtiene la fila padre correspondiente
+        parentRow.style.display = ''; // Asegura que la fila principal sea visible
     });
 });
 
 // Inicialmente ocultar todas las filas adicionales
 window.onload = function() {
-    const filas = document.querySelectorAll('.fila-historial');
-    for (let i = 50; i < filas.length; i++) {
-        filas[i].style.display = 'none';
-    }
-    document.querySelectorAll('.oculto').forEach(row => {
-        row.style.display = 'none';
-    });
+    reiniciarTabla(); // Llama a la función para iniciar la tabla correctamente
 };
 
 // Función para filtrar columnas
@@ -36,14 +46,14 @@ function filtrarColumna(inputId, columnaIndex) {
         if (td) {
             const txtValue = td.textContent || td.innerText;
             if (txtValue.toLowerCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
+                tr[i].style.display = ""; // Mostrar fila
                 visibleCount++;
             } else {
-                tr[i].style.display = "none";
+                tr[i].style.display = "none"; // Ocultar fila
             }
         }
     }
-    
+
     // Ocultar el botón "Mostrar más" si hay texto en cualquier campo de búsqueda
     const searchFields = [
         document.getElementById("buscarID"),
@@ -69,12 +79,12 @@ function filtrarColumna(inputId, columnaIndex) {
 function reiniciarTabla() {
     const filas = document.querySelectorAll('.fila-historial');
     for (let i = 0; i < filas.length; i++) {
-        filas[i].style.display = 'none';
+        filas[i].style.display = 'none'; // Ocultar todas las filas
     }
 
     // Mostrar las primeras 50 filas
     for (let i = 0; i < Math.min(50, filas.length); i++) {
-        filas[i].style.display = '';
+        filas[i].style.display = ''; // Mostrar filas
     }
 
     // Ocultar el botón si ya se han mostrado todas las filas
@@ -93,7 +103,7 @@ document.getElementById('mostrarMas').addEventListener('click', function() {
     }
 
     for (let i = visibleRows; i < visibleRows + 50 && i < filas.length; i++) {
-        filas[i].style.display = '';
+        filas[i].style.display = ''; // Mostrar más filas
     }
 
     // Si ya se han mostrado todas las filas, ocultar el botón
