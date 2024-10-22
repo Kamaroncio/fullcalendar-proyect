@@ -119,19 +119,43 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (numbers.length === 2 && numbers.includes(1) && numbers.includes(2)) {
                 color = 'rgb(85, 170, 85)';  // Verde pastel oscuro solo para "1 y 2"
             } else if (numbers.length > 1) {
-                // Combinación de colores para múltiples números
+                // Variables para acumular los valores de los colores preestablecidos
                 let red = 0, green = 0, blue = 0;
-        
+
+                // Definir los colores preestablecidos
+                const presetColors = {
+                    1: { r: 41, g: 128, b: 185 },
+                    2: { r: 185, g: 41, b: 41 },
+                    3: { r: 123, g: 185, b: 41 },
+                    4: { r: 41, g: 185, b: 185 },
+                    5: { r: 67, g: 41, b: 185 },
+                    6: { r: 185, g: 41, b: 142 },
+                    7: { r: 41, g: 185, b: 137 },
+                    8: { r: 185, g: 111, b: 41 },
+                    9: { r: 209, g: 88, b: 114 }
+                };
+
+                // Sumar los valores RGB de los colores preestablecidos
                 numbers.forEach(function(number) {
-                    red += (number * 20) % 256;
-                    green += (number * 30) % 256;
-                    blue += (number * 40) % 256;
+                    if (presetColors[number]) {
+                        red += presetColors[number].r;
+                        green += presetColors[number].g;
+                        blue += presetColors[number].b;
+                    }
                 });
-        
-                red = Math.min(255, Math.floor(red / numbers.length + 100));  
-                green = Math.min(255, Math.floor(green / numbers.length + 100)); 
-                blue = Math.min(255, Math.floor(blue / numbers.length + 100)); 
-        
+
+                // Normalizar los colores dividiendo entre la cantidad de números
+                red = Math.floor(red / numbers.length);
+                green = Math.floor(green / numbers.length);
+                blue = Math.floor(blue / numbers.length);
+
+                // Incrementar el brillo
+                const brightnessBoost = 30;  // Aumentar este valor para más brillo
+                red = Math.min(255, red + brightnessBoost);
+                green = Math.min(255, green + brightnessBoost);
+                blue = Math.min(255, blue + brightnessBoost);
+
+                // Aplicar el color combinado
                 color = `rgb(${red}, ${green}, ${blue})`;
             } else {
                 color = 'rgb(127, 140, 141)'; // Gris oscuro por defecto
@@ -210,19 +234,43 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (numbers.length === 2 && numbers.includes(1) && numbers.includes(2)) {
                 color = 'rgb(85, 170, 85)';  // Verde pastel oscuro solo para "1 y 2"
             } else if (numbers.length > 1) {
-                // Combinación de colores para múltiples números
+                // Variables para acumular los valores de los colores preestablecidos
                 let red = 0, green = 0, blue = 0;
-        
+
+                // Definir los colores preestablecidos
+                const presetColors = {
+                    1: { r: 41, g: 128, b: 185 },
+                    2: { r: 185, g: 41, b: 41 },
+                    3: { r: 123, g: 185, b: 41 },
+                    4: { r: 41, g: 185, b: 185 },
+                    5: { r: 67, g: 41, b: 185 },
+                    6: { r: 185, g: 41, b: 142 },
+                    7: { r: 41, g: 185, b: 137 },
+                    8: { r: 185, g: 111, b: 41 },
+                    9: { r: 209, g: 88, b: 114 }
+                };
+
+                // Sumar los valores RGB de los colores preestablecidos
                 numbers.forEach(function(number) {
-                    red += (number * 20) % 256;
-                    green += (number * 30) % 256;
-                    blue += (number * 40) % 256;
+                    if (presetColors[number]) {
+                        red += presetColors[number].r;
+                        green += presetColors[number].g;
+                        blue += presetColors[number].b;
+                    }
                 });
-        
-                red = Math.min(255, Math.floor(red / numbers.length + 100));  
-                green = Math.min(255, Math.floor(green / numbers.length + 100)); 
-                blue = Math.min(255, Math.floor(blue / numbers.length + 100)); 
-        
+
+                // Normalizar los colores dividiendo entre la cantidad de números
+                red = Math.floor(red / numbers.length);
+                green = Math.floor(green / numbers.length);
+                blue = Math.floor(blue / numbers.length);
+
+                // Incrementar el brillo
+                const brightnessBoost = 30;  // Aumentar este valor para más brillo
+                red = Math.min(255, red + brightnessBoost);
+                green = Math.min(255, green + brightnessBoost);
+                blue = Math.min(255, blue + brightnessBoost);
+
+                // Aplicar el color combinado
                 color = `rgb(${red}, ${green}, ${blue})`;
             } else {
                 color = 'rgb(127, 140, 141)'; // Gris oscuro por defecto
