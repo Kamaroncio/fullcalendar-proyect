@@ -117,3 +117,9 @@ a{
     background-color: #6d7a80 !important;
     border-color: #6d7a80 !important;
 }
+.fc-popover-header {
+    background-color: rgb(203, 213, 218) !important
+}
+.fc-popover-body {
+    background-color: #fafbff !important;
+}
