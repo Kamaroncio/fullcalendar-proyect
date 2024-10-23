@@ -91,10 +91,10 @@ try {
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <br>
+    </div>
+    <br>
         <button id="mostrarMas">Mostrar más</button>
         <br><br><br><br>
-    </div>
     </center>
     <script src="historial.js"></script>
 </body>
